@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -12,16 +13,23 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 
 # ══════════════════════════════════════════════
+#  檔案路徑（相容 Streamlit Cloud）
+# ══════════════════════════════════════════════
+BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
+PKL_PATH  = os.path.join(BASE_DIR, 'model_checkpoint.pkl')
+XLSX_PATH = os.path.join(BASE_DIR, 'Gross_Profit_vs_Competitor_0514_Copliot.xlsx')
+
+# ══════════════════════════════════════════════
 #  載入模型 & 資料
 # ══════════════════════════════════════════════
 @st.cache_resource
 def load_model():
-    with open('model_checkpoint.pkl', 'rb') as f:
+    with open(PKL_PATH, 'rb') as f:
         return pickle.load(f)
 
 @st.cache_data
 def load_bcg_data():
-    df = pd.read_excel('Gross_Profit_vs_Competitor_0514_Copliot.xlsx', sheet_name='raw data')
+    df = pd.read_excel(XLSX_PATH, sheet_name='raw data')
     df.columns = df.columns.str.strip()
     df = df.drop_duplicates()
 
