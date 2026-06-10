@@ -123,6 +123,28 @@ def preprocess(ckpt, product, kw, qty, unit_price, subtotal_price,
 # ══════════════════════════════════════════════
 st.set_page_config(page_title="銷售分析系統", page_icon="📊", layout="wide")
 
+# ── 側欄按鈕改為三直線 ☰ ──────────────────────
+st.markdown("""
+<style>
+button[data-testid="stSidebarNavToggleButton"] svg,
+button[data-testid="stBaseButton-headerNoPadding"] svg {
+    display: none !important;
+}
+button[data-testid="stSidebarNavToggleButton"]::after,
+button[data-testid="stBaseButton-headerNoPadding"]::after {
+    content: "☰";
+    font-size: 1.4rem;
+    line-height: 1;
+}
+[data-testid="collapsedControl"] svg { display: none !important; }
+[data-testid="collapsedControl"]::after {
+    content: "☰";
+    font-size: 1.4rem;
+    line-height: 1;
+}
+</style>
+""", unsafe_allow_html=True)
+
 ckpt = load_model()
 lr, rf, xgb  = ckpt['lr'], ckpt['rf'], ckpt['xgb']
 product_list = ckpt['product_list']
@@ -157,7 +179,7 @@ if page == "🔍 接單成功率預測":
                                        value=0.35, step=0.01, format="%.4f")
         energy_grant = st.number_input("能源補助金額", min_value=0, value=375000, step=1000)
 
-    st.subheader("🏢 競爭對手報價（不知道可留空）")
+    st.subheader("🏢 競爭對手報價（選填，如無資料可略過）")
     col3, col4, col5 = st.columns(3)
     with col3:
         use_a = st.checkbox("有 Competitor A 資料")
